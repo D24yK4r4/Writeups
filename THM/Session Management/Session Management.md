@@ -1,4 +1,4 @@
-
+﻿
 # **What is Session Management?**
 
 **Session Management Lifecycle**
@@ -483,7 +483,7 @@ We would also need to investigate the following further:
 Given all of the information provided above, it seems like we need to do a little bit more exploring to see if we can access sensitive data. Using the information you learned about securing the session management lifecycle and the information of the mapped-out lifecycle, see if you can get access as a student to lecturer information.
 
 <details><summary>What is the username of the student with the name X?</summary>
-THM{Got.the.User}</details>
+THM{REDACTED}</details>
 
 <details><summary>How many lecturers are registered on the application?</summary>
 1</details>

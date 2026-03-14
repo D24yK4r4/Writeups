@@ -1,4 +1,4 @@
-# **Introduction**
+﻿# **Introduction**
 
 AD enumeration is the essential first step in internal penetration tests of Windows enterprise networks. Often we only get VPN access without user credentials, so we must collect domain info (users, groups, computers, policies). That helps reveal vulnerabilities or attack paths that can give an initial foothold (e.g., access to a user workstation).
 
@@ -284,7 +284,7 @@ Finally, as mentioned earlier in this task, we should not forget Nmap with the s
 
 ![LAb Screenshot](011.png)
 ![Lab Screenshot](012.png)
-THM{88_SMB_88}</details>
+THM{REDACTED}</details>
 
 
 # **Domain Enumeration**

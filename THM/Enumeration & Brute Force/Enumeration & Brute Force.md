@@ -1,4 +1,4 @@
-
+﻿
 # **Task 2 - Authentication Enumeration**
 
 Authentication enumeration is like peeling back the layers of an onion - removing each layer of a system's security to reveal the real operations underneath. It's about piecing together a puzzle by understanding what clues reveal about the security of a system.
@@ -169,7 +169,7 @@ Step 6: Use the valid token to set a new password and gain account access.
 **Answer the questions below**
 
 <details><summary>What is the flag?</summary>
-THM{50_pr3d1ct4BL333!!}</details>
+THM{REDACTED}</details>
 
 
 # **Task 5 - Exploiting HTTP Basic Authentication**
@@ -254,7 +254,7 @@ Use the decoded credentials to access the application
 **Answer the questions below**
 
 <details><summary>What is the flag?</summary>
-THM{b4$$1C_AuTTHHH}</details>
+THM{REDACTED}</details>
 
 
 # **Task 6 - OSINT**

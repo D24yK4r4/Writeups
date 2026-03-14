@@ -1,4 +1,4 @@
-# ValenFind - TryHackMe CTF Writeup
+﻿# ValenFind - TryHackMe CTF Writeup
 
 ## Challenge Overview
 ValenFind is a vulnerable dating application that was "vibe-coded" by someone who just learned to code this year. Our mission: exploit it and capture the flag.
@@ -133,11 +133,11 @@ INSERT INTO users VALUES(2,'casanova_official','secret123','Giacomo Casanova',..
 ...
 INSERT INTO users VALUES(8,'cupid','admin_root_x99','System Administrator',
 'cupid@internal.cupid','555-0000-ROOT',
-'FLAG: THM{v1be_c0ding_1s_n0t_my_cup_0f_t3a}',
+'FLAG: THM{REDACTED}',
 'I keep the database secure. No peeking.',1000,'cupid.jpg');
 ```
 
-**🚩 Flag Found:** `THM{v1be_c0ding_1s_n0t_my_cup_0f_t3a}`
+**🚩 Flag Found:** `THM{REDACTED}`
 
 ---
 
@@ -202,6 +202,6 @@ INSERT INTO users VALUES(8,'cupid','admin_root_x99','System Administrator',
 ---
 
 **Challenge Completed:** ✅  
-**Flag:** `THM{v1be_c0ding_1s_n0t_my_cup_0f_t3a}`  
+**Flag:** `THM{REDACTED}`  
 **Difficulty:** Medium  
 **Primary Vulnerabilities:** LFI, Hardcoded Credentials, Information Disclosure

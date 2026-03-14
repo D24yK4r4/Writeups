@@ -1,4 +1,4 @@
-# LoveNote CTF Challenge - Write-up
+﻿# LoveNote CTF Challenge - Write-up
 
 ## Challenge Overview
 
@@ -122,7 +122,7 @@ You successfully forged an admin signature!
 ## Flag
 
 ```
-THM{PR3D1CT4BL3_S33D5_BR34K_H34RT5}
+THM{REDACTED}
 ```
 
 ---

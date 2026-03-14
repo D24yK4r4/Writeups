@@ -1,4 +1,4 @@
-# **Introduction**
+﻿# **Introduction**
 
 What is The Diamond Model?
 
@@ -149,7 +149,7 @@ Are you ready to construct the Diamond Model? Please, deploy the static site att
 <details><summary>Complete all eight areas of the diamond. What is the flag that is displayed to you?</summary>
 
 ![Lab Screenshot](001.png)
-THM{DIAMOND_MODEL_ATTACK_CHAIN}</details>
+THM{REDACTED}</details>
 
 
 # **Conclusion**

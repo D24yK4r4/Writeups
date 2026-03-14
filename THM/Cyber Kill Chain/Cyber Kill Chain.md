@@ -1,4 +1,4 @@
-![Cover](001.png)
+﻿![Cover](001.png)
 The Cyber Kill Chain® is a cybersecurity framework created by Lockheed Martin in 2011, based on a military attack model. It breaks down cyberattacks into sequential phases that adversaries must complete to succeed.
 
 Understanding the Kill Chain helps defenders identify attack techniques, detect intrusions, and close security gaps. It is especially useful against ransomware, breaches, and APTs.
@@ -186,7 +186,7 @@ How did the data breach happen? Deploy the static site attached to this task and
 <details><summary>What is the flag after you complete the static site?</summary>
 
 ![Lab Screenshot](003.png)
-THM{7HR347_1N73L_12_4w35om3}
+THM{REDACTED}
 </details>
 
 

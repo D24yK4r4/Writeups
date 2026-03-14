@@ -1,4 +1,4 @@
-# Matchmaker CTF Writeup
+﻿# Matchmaker CTF Writeup
 
 ## Challenge Description
 
@@ -111,30 +111,7 @@ r2 = requests.post(f"{TARGET}/upload", files=files2)
 print(f"Upload 2: {r2.status_code}")
 
 # Check for flag
-if 'THM{' in r2.text or 'flag' in r2.text.lower():
-    print("\nFLAG FOUND!")
-    print(r2.text)
-```
-
-### Execution
-
-```bash
-python3 test_collision.py
-```
-
-Output:
-```
-Hash1: 79054025255fb1a26e4bc422aef54eb4
-Hash2: 79054025255fb1a26e4bc422aef54eb4
-Collision verified: True
-```
-
-After uploading the second file (which has the same MD5 hash as the first but different content), the server detects the collision and returns the match page.
-
-## Flag
-
-```
-THM{hash_puppies_4_all}
+if 'THM{REDACTED}
 ```
 
 ## Key Takeaways

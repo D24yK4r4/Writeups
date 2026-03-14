@@ -1,4 +1,4 @@
-# HackerOne Hacker101 CTF – Photo Gallery Write-up
+﻿# HackerOne Hacker101 CTF – Photo Gallery Write-up
 
 **Challenge:** Photo Gallery  
 **Difficulty:** Moderate  
@@ -6,9 +6,9 @@
 
 | Flag | Status | Value |
 |------|--------|-------|
-| Flag0 | ✅ Found | `^FLAG^c7e3ca7c1a09acba3ec08bcb73ff5cb513483da8e82a2c0fb538d2f7a63dbffe$FLAG$` |
-| Flag1 | ✅ Found | `^FLAG^55bfd9d13c39cafe9102c8d225a6aa41746e75150e13db5495a444cfaf2f5081$FLAG$` |
-| Flag2 | ✅ Found | `^FLAG^8c2097a75180abe984aaef2ffdced8827282f720f3b8ee89e49c615a17ba1e0a$FLAG$` |
+| Flag0 | ✅ Found | `^FLAG^REDACTED$FLAG$` |
+| Flag1 | ✅ Found | `^FLAG^REDACTED$FLAG$` |
+| Flag2 | ✅ Found | `^FLAG^REDACTED$FLAG$` |
 
 ---
 
@@ -95,7 +95,7 @@ The `--code=200` flag was critical: sqlmap uses HTTP 200 vs 404 to distinguish t
 
 Record 3 has no real filename — the `filename` field contains the flag itself. The "Invisible" image doesn't render because the server tries to open that hex string as a file and fails.
 
-**Flag1:** `^FLAG^55bfd9d13c39cafe9102c8d225a6aa41746e75150e13db5495a444cfaf2f5081$FLAG$`
+**Flag1:** `^FLAG^REDACTED$FLAG$`
 
 ---
 
@@ -121,10 +121,10 @@ This returned the full Flask application source code, which contained the flag i
 
 ```python
 # It's dangerous to go alone, take this:
-# ^FLAG^c7e3ca7c1a09acba3ec08bcb73ff5cb513483da8e82a2c0fb538d2f7a63dbffe$FLAG$
+# ^FLAG^REDACTED$FLAG$
 ```
 
-**Flag0:** `^FLAG^c7e3ca7c1a09acba3ec08bcb73ff5cb513483da8e82a2c0fb538d2f7a63dbffe$FLAG$`
+**Flag0:** `^FLAG^REDACTED$FLAG$`
 
 ---
 
@@ -171,12 +171,12 @@ curl "https://<target>/"
 The `Space used:` section now contains the full environment on a single line:
 
 ```
-PYTHONIOENCODING=UTF-8 ... FLAGS=["^FLAG^c7e3ca7c1...$FLAG$","^FLAG^55bfd9...$FLAG$","^FLAG^8c2097...$FLAG$"] ...
+PYTHONIOENCODING=UTF-8 ... FLAGS=["^FLAG^REDACTED$FLAG$","^FLAG^REDACTED$FLAG$","^FLAG^REDACTED$FLAG$"] ...
 ```
 
 All three flags are stored in the `FLAGS` environment variable.
 
-**Flag2:** `^FLAG^8c2097a75180abe984aaef2ffdced8827282f720f3b8ee89e49c615a17ba1e0a$FLAG$`
+**Flag2:** `^FLAG^REDACTED$FLAG$`
 
 ### Why `echo $(printenv)` works
 

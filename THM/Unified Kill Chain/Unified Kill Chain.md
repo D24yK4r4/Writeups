@@ -1,4 +1,4 @@
-![cover](001.png)
+﻿![cover](001.png)
 
 Understanding how cyber threats work—their goals, methods, and behaviour—is key to building strong defences (your cybersecurity posture).
 
@@ -241,7 +241,7 @@ Deploy the static site attached to the task. You will need to match the various 
 <details><Summary>Match the scenario prompt to the correct phase of the Unified Kill Chain to reveal the flag at the end. What is the flag?</summary>
 
 ![Lab Screenshot](006.png)
-THM{UKC_SCENARIO}</details>
+THM{REDACTED}</details>
 
 
 # **Conclusion**

@@ -1,4 +1,4 @@
-# **Introduction**
+﻿# **Introduction**
 
 Cyber Threat Intelligence for SOC L1 Analysts
 A modern Security Operations Centre (SOC) is a busy place: dashboards flashing, endless telemetry, and constant pressure to catch the next breach. At the centre of this noise sits the Level 1 analyst—the first human filter for every alert, pop-up, or suspicious packet.
@@ -288,5 +288,5 @@ John Doe</details>
 <details><summary>After building the threat profile, what message do you receive?</summary>
 
 ![Lab Screenshot](013.png)
-THM{NOW_I_CAN_CTI}</details>
+THM{REDACTED}</details>
 

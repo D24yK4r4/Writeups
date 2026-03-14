@@ -1,4 +1,4 @@
-
+﻿
 
 
 Objective
@@ -33,7 +33,7 @@ Block the hash algorythm
 <details><summary>What is the first flag you receive after successfully detecting sample1.exe?</summary>
 
 ![Lab Screenshot](002.png)
-THM{f3cbf08151a11a6a331db9c6cf5f4fe4}</details>
+THM{REDACTED}</details>
 
 Question 2.
 
@@ -46,7 +46,7 @@ Block the IP address as it below
 <details><summary>What is the second flag you receive after successfully detecting sample2.exe?</summary>
 
 ![Lab Screenshot](008.png)
-THM{2ff48a3421a938b388418be273f4806d}</details>
+THM{REDACTED}</details>
 
 Question 3.
 
@@ -59,7 +59,7 @@ Create DNS Rule (block/deny)
 
 <details><summary>What is the third flag you receive after successfully detecting sample3.exe?</summary>
 ![Lab Screenshot](012.png)
-THM{4eca9e2f61a19ecd5df34c788e7dce16}</details>
+THM{REDACTED}</details>
 
 Question 4.
 
@@ -77,7 +77,7 @@ Create Sigma Rule
 <details><summary>What is the fourth flag you receive after successfully detecting sample4.exe?</summary>
 
 ![Lab Screenshot](020.ng.png)
-THM{c956f455fc076aea829799c0876ee399}</details>
+THM{REDACTED}</details>
 
 Question 5.
 
@@ -97,7 +97,7 @@ Create a custom rule
 
 <details><summary>What is the fifth flag you receive after successfully detecting sample5.exe?</summary>
 ![Lab Screenshot](029.png)
-THM{46b21c4410e47dc5729ceadef0fc722e}</details>
+THM{REDACTED}</details>
 
 Question 6.
 
@@ -119,4 +119,4 @@ Create a custom rule
 <details><summary>What is the final flag you receive from Sphinx?</summary>
 
 ![Lab Screenshot](038.png)
-THM{c8951b2ad24bbcbac60c16cf2c83d92c}</details>
+THM{REDACTED}</details>

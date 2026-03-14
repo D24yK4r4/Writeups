@@ -1,4 +1,4 @@
-Some mistakes can be costly.
+﻿Some mistakes can be costly.
 
 Gain a shell, find the way and escalate your privileges!
 
@@ -90,10 +90,10 @@ Then:
 
 ![Lab Screenshot](007.png)
 
-THM{4a6831d5f124b25eefb1e92e0f0da4ca}</details>
+THM{REDACTED}</details>
 
 <details><summary>What is root.txt?</summary>
 
 ![Lab Screenshot](009.png)
 
-THM{33ad5b530e71a172648f424ec23fae60}</details>
+THM{REDACTED}</details>

@@ -1,4 +1,4 @@
-# **Introduction**
+﻿# **Introduction**
 
 Network Security is a set of operations for protecting data, applications, devices and systems connected to the network. It is accepted as one of the significant subdomains of cyber security. It focuses on the system design, operation and management of the architecture/infrastructure to provide network accessibility, integrity, continuity and reliability. Traffic analysis (often called Network Traffic Analysis) is a subdomain of the Network Security domain, and its primary focus is investigating the network data to identify problems and anomalies.
 
@@ -81,7 +81,7 @@ Add to filter: 10.10.99.62, 10.10.99.99
 
 ![Lab Screenshot](007.png)
 
-THM{PACKET_MASTER}</details>
+THM{REDACTED}</details>
 
 
 **Level-2 is simulating the identification and filtering of malicious IP and Port addresses.**
@@ -92,7 +92,7 @@ Add to filter: 2222, 4444, 7777
 
 ![Lab Screenshot](008.png)
 
-THM{DETECTION_MASTER}</details>
+THM{REDACTED}</details>
 
 
 # **Conclusion**
