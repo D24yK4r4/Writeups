@@ -17,7 +17,7 @@ Actively pursuing penetration testing and red teaming.
 |-----------------------------------|-----------------------|
 |         [TryHackMe](THM/)         |      Rooms & paths    |
 | [HackerOne Hacker101](Hacker101/) |     CTF challenges    |
-|         [HackTheBox](HTB/)        | Machines & challenges |
+
 
 ## Disclaimer
 
