@@ -38,7 +38,7 @@ The Bounty Hacker room simulates a Linux target inspired by the Cowboy Bebop ani
 
 **Severity:** High  
 **Classification:** CWE-284 — Improper Access Control  
-**OWASP:** A01:2021 — Broken Access Control
+**OWASP:** A05:2021 — Security Misconfiguration
 
 **Description:**  
 The FTP service on port 21 permitted anonymous login without credentials. Two files were accessible in the root FTP directory: `locks.txt` (a password wordlist) and `task.txt` (an internal note disclosing a username). These files provided both the attack surface and the credentials necessary for the next phase.
@@ -108,7 +108,7 @@ Enforce strong, unique passwords. Implement fail2ban or equivalent SSH brute-for
 
 **Severity:** Critical  
 **Classification:** CWE-269 — Improper Privilege Management  
-**OWASP:** A01:2021 — Broken Access Control
+**OWASP:** A04:2021 — Insecure Design
 
 **Description:**  
 Post-login enumeration revealed the user had sudo permissions to run `/bin/tar` as root without a password. The `tar` binary supports arbitrary command execution via its `--checkpoint-action` flag — a well-documented GTFOBins vector. This was exploited to spawn a root shell.
@@ -143,9 +143,9 @@ Never grant sudo access to binaries with shell escape capabilities (`tar`, `vim`
 
 | ID | Title | Severity | CWE | OWASP |
 |----|-------|----------|-----|-------|
-| F-01 | Anonymous FTP — Credential File Exposure | High | CWE-284 | A01:2021 |
+| F-01 | Anonymous FTP — Credential File Exposure | High | CWE-284 | A05:2021 |
 | F-02 | SSH Brute-force — Weak Password | High | CWE-307 | A07:2021 |
-| F-03 | Privilege Escalation via sudo tar | Critical* | CWE-269 | A01:2021 |
+| F-03 | Privilege Escalation via sudo tar | Critical* | CWE-269 | A04:2021 |
 
 *Critical only in combination with prior access.
 
