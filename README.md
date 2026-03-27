@@ -16,7 +16,6 @@ Actively pursuing penetration testing and red teaming.
 |            Platform               |        Writeups       |
 |-----------------------------------|-----------------------|
 | [HackerOne Hacker101](Hacker101/) |          CTF          |
-|       [HackTheBox](HTB)           |          CTF          |
 |       [TryHackMe](THM/)           |       CTF, Rooms      |
 
 
